@@ -1,39 +1,82 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { kernel } from './services/kernel';
 import { Window } from './components/Window';
+import { StatusBar } from './components/StatusBar';
 import { TerminalApp } from './apps/TerminalApp';
 import { GitSyncApp } from './apps/GitSyncApp';
-import { SettingsApp } from './apps/SettingsApp';
 import { FilesApp } from './apps/FilesApp';
+import { SettingsApp } from './apps/SettingsApp';
+import { MusicApp } from './apps/MusicApp';
+import { VideoPlayerApp } from './apps/VideoPlayerApp';
+import { IDEApp } from './apps/IDEApp';
+import { ClockApp } from './apps/ClockApp';
+import { Zap, Terminal, Folder, Settings, Music, Film, Code, Clock } from 'lucide-react';
+
+const ICONS: Record<string, any> = { Terminal, Folder, Settings, Music, Film, Code, Clock, Zap };
 
 export default function App() {
   const [booted, setBooted] = useState(false);
   const [windows, setWindows] = useState<any[]>([]);
-  useEffect(() => { kernel.boot().then(() => setBooted(true)); }, []);
-  useEffect(() => {
-    const h = (e: any) => {
-      const { appId, args } = e.detail;
-      setWindows(p => [...p, { id: crypto.randomUUID(), appId, title: appId.toUpperCase(), x: 50 + (p.length*20), y: 50 + (p.length*20), width: 800, height: 600, zIndex: 100 + p.length, args }]);
-    };
-    window.addEventListener('sys-launch-app', h as any);
-    return () => window.removeEventListener('sys-launch-app', h as any);
+  const [apps, setApps] = useState<any[]>([]);
+  const [activeWin, setActiveWin] = useState<string | null>(null);
+
+  useEffect(() => { 
+    kernel.boot().then(async () => {
+      const ids = await kernel.registry.get('apps.installed') || [];
+      const loaded = [];
+      for(const id of ids) {
+        const c = await kernel.fs.cat(`/system/apps/${id}.json`);
+        loaded.push(JSON.parse(c));
+      }
+      setApps(loaded); setBooted(true);
+    });
   }, []);
-  if (!booted) return <div className="h-screen bg-black flex items-center justify-center text-blue-500 font-mono animate-pulse tracking-widest">SHARK_OS_BOOTING...</div>;
+
+  const launch = (app: any, args?: any) => {
+    setWindows(p => {
+      const ex = p.find(w => w.appId === app.id);
+      if(ex) return p.map(w => w.id === ex.id ? {...w, isMinimized: false, zIndex: 200} : w);
+      return [...p, { id: crypto.randomUUID(), appId: app.id, title: app.name, x: 50+(p.length*20), y: 60+(p.length*20), width: 800, height: 600, zIndex: 100+p.length, args }];
+    });
+  };
+
+  if (!booted) return <div className="h-screen bg-black flex items-center justify-center text-blue-500 font-mono animate-pulse tracking-widest uppercase">Shark OS Booting...</div>;
+
   return (
-    <div className="h-screen w-screen bg-[#020202] relative overflow-hidden" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564)', backgroundSize: 'cover' }}>
-      <div className="p-10 flex gap-10">
-        <div onClick={() => kernel.launchApp('terminal')} className="cursor-pointer flex flex-col items-center group"><div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10 text-white font-black text-2xl group-hover:bg-white/20 transition-all shadow-xl">T</div><span className="text-[10px] text-white font-bold uppercase mt-2">Terminal</span></div>
-        <div onClick={() => kernel.launchApp('git_sync')} className="cursor-pointer flex flex-col items-center group"><div className="w-16 h-16 bg-indigo-600/20 rounded-2xl flex items-center justify-center border border-indigo-500/20 text-indigo-400 font-black text-2xl group-hover:bg-indigo-600/40 transition-all shadow-xl">R</div><span className="text-[10px] text-indigo-400 font-bold uppercase mt-2">Replicator</span></div>
-        <div onClick={() => kernel.launchApp('files')} className="cursor-pointer flex flex-col items-center group"><div className="w-16 h-16 bg-yellow-600/20 rounded-2xl flex items-center justify-center border border-yellow-500/20 text-yellow-400 font-black text-2xl group-hover:bg-yellow-600/40 transition-all shadow-xl">F</div><span className="text-[10px] text-yellow-400 font-bold uppercase mt-2">Explorer</span></div>
+    <div className="h-screen w-screen bg-[#020202] relative overflow-hidden font-sans">
+      <StatusBar />
+      <div className="absolute inset-0 p-8 pt-16 grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-8 content-start">
+        {apps.map(app => (
+          <div key={app.id} onClick={() => launch(app)} className="flex flex-col items-center gap-3 cursor-pointer group active:scale-95 transition-all">
+            <div className="w-16 h-16 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center shadow-2xl group-hover:bg-white/20 transition-all">
+              {ICONS[app.icon] ? React.createElement(ICONS[app.icon], { size: 32, className: 'text-white' }) : <Zap size={32} />}
+            </div>
+            <span className="text-[10px] font-black text-white/80 uppercase tracking-widest text-center truncate w-full">{app.name}</span>
+          </div>
+        ))}
       </div>
-      {windows.map(w => (
-        <Window key={w.id} state={w} onClose={(id: string) => setWindows(p => p.filter(x => x.id !== id))} onFocus={() => {}}>
-          {w.appId === 'terminal' && <TerminalApp />}
-          {w.appId === 'git_sync' && <GitSyncApp />}
-          {w.appId === 'files' && <FilesApp />}
-          {w.appId === 'settings' && <SettingsApp />}
+      {windows.map(win => (
+        <Window key={win.id} state={win} 
+          onClose={id => setWindows(p => p.filter(w => w.id !== id))}
+          onMinimize={id => setWindows(p => p.map(w => w.id === id ? {...w, isMinimized: true} : w))}
+          onMaximize={id => setWindows(p => p.map(w => w.id === id ? {...w, isMaximized: !w.isMaximized} : w))}
+          onFocus={id => setActiveWin(id)}
+        >
+          {win.appId === 'terminal' && <TerminalApp />}
+          {win.appId === 'git_sync' && <GitSyncApp />}
+          {win.appId === 'files' && <FilesApp />}
+          {win.appId === 'settings' && <SettingsApp />}
+          {win.appId === 'music' && <MusicApp file={win.args?.file} />}
+          {win.appId === 'video' && <VideoPlayerApp file={win.args?.file} />}
+          {win.appId === 'ide' && <IDEApp />}
+          {win.appId === 'clock' && <ClockApp />}
         </Window>
       ))}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 h-14 bg-white/5 backdrop-blur-3xl border border-white/10 rounded-2xl px-4 flex items-center gap-4 shadow-2xl">
+        {windows.map(w => <div key={w.id} onClick={() => setWindows(p => p.map(x => x.id === w.id ? {...x, isMinimized: false} : x))} className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center cursor-pointer border border-white/5 hover:bg-white/20 transition-all">
+          {ICONS[apps.find(a => a.id === w.appId)?.icon] ? React.createElement(ICONS[apps.find(a => a.id === w.appId).icon], { size: 18, className: 'text-white' }) : <Zap size={18}/>}
+        </div>)}
+      </div>
     </div>
   );
 }

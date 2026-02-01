@@ -6,3 +6,6 @@ export interface AppDefinition { id: string; name: string; icon: string; compone
 export interface Notification { id: string; title: string; message: string; icon?: string; timestamp: number; urgent?: boolean; }
 export interface IVFS { mount(path: string, backend: any): void; ls(path: string): Promise<string[]>; cat(path: string): Promise<string>; write(path: string, data: string): Promise<void>; mkdir(path: string): Promise<void>; rm(path: string): Promise<void>; exists(path: string): Promise<boolean>; }
 export interface IRegistry { get(key: string): Promise<any>; set(key: string, value: any): Promise<void>; delete(key: string): Promise<void>; list(prefix: string): Promise<string[]>; flush?: () => Promise<void>; }
+export interface ShellCommand { argv: string[]; redirect: string | null; env: Record<string, string>; }
+export interface NetworkRequestOptions { method?: string; headers?: Record<string, string>; body?: string; }
+export interface BatteryManager extends EventTarget { charging: boolean; level: number; }

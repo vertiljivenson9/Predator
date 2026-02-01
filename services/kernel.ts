@@ -51,7 +51,8 @@ export class Kernel {
         { id: 'settings', name: 'Settings', icon: 'Settings', component: 'SettingsApp', version: '4.5' },
         { id: 'music', name: 'Music', icon: 'Music', component: 'MusicApp', version: '1.0' },
         { id: 'video', name: 'Video', icon: 'Film', component: 'VideoPlayerApp', version: '1.0' },
-        { id: 'ide', name: 'Studio', icon: 'Code', component: 'IDEApp', version: '1.2' }
+        { id: 'ide', name: 'Studio', icon: 'Code', component: 'IDEApp', version: '1.2' },
+        { id: 'clock', name: 'Clock', icon: 'Clock', component: 'ClockApp', version: '1.0' }
       ];
       for (const app of apps) await this.fs.write(`/system/apps/${app.id}.json`, JSON.stringify(app));
       await this.registry.set('apps.installed', apps.map(a => a.id));

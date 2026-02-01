@@ -3,4 +3,7 @@ export class NativeFSBackend {
   async mount() {}
   async exists() { return false; }
   async ls() { return []; }
+  async write() {}
+  async mkdir() {}
+  async rm() {}
 }

@@ -1,4 +1,4 @@
 export class ClipboardManager {
-  async copy(text: string) { await navigator.clipboard.writeText(text); }
+  async copy(t: string) { await navigator.clipboard.writeText(t); }
   async paste() { return await navigator.clipboard.readText(); }
 }

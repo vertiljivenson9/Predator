@@ -1,5 +1,10 @@
+import { Notification } from '../../types';
 export class NotificationManager {
-  private h: any[] = [];
-  push(t: string, m: string) { this.h.unshift({ id: Math.random(), t, m, time: Date.now() }); console.log('Notify:', t); }
-  getHistory() { return this.h; }
+  private history: Notification[] = [];
+  push(title: string, message: string, urgent = false) {
+    const n = { id: crypto.randomUUID(), title, message, timestamp: Date.now(), urgent };
+    this.history.unshift(n); if(this.history.length > 50) this.history.pop();
+    console.log('[Notify]', title, message);
+  }
+  getHistory() { return this.history; }
 }
