@@ -1,0 +1,1 @@
+import React from 'react'; export const ClockApp = () => <div className="bg-gray-950 h-full">Clock v1.0</div>;

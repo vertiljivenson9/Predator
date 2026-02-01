@@ -1,0 +1,1 @@
+import React from 'react'; export const StoreApp = () => <div className="bg-slate-50 h-full">App Store v1.0</div>;

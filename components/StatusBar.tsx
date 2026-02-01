@@ -1,0 +1,1 @@
+import React from 'react'; export const StatusBar = () => <div className="h-6 bg-black text-white px-4 flex justify-between"><span>SHARK OS</span><span>12:00</span></div>;

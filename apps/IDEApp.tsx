@@ -1,0 +1,1 @@
+import React from 'react'; export const IDEApp = () => <div className="bg-[#1e1e1e] h-full text-white">Viscro Studio v1.2</div>;

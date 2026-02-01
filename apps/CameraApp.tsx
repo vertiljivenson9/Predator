@@ -1,0 +1,1 @@
+import React from 'react'; export const CameraApp = () => <div className="bg-black h-full">Camera v2.0</div>;

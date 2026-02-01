@@ -1,0 +1,1 @@
+export class HistoryService { record() {} subscribe() { return () => {}; } getEvents() { return []; } }

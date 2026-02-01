@@ -1,0 +1,1 @@
+import React from 'react'; export const WeatherApp = () => <div className="bg-blue-500 h-full">Weather v1.0</div>;

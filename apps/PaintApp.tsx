@@ -1,0 +1,1 @@
+import React from 'react'; export const PaintApp = () => <div className="bg-gray-200 h-full">Apex Paint v1.0</div>;

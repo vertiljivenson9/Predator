@@ -1,0 +1,1 @@
+export class ClipboardManager { async copy(t: string) {} async paste() { return ''; } }

@@ -1,0 +1,1 @@
+import React from 'react'; export const BiosScreen = ({ onComplete }: any) => { React.useEffect(() => { onComplete(); }, []); return <div className="bg-black h-full">BIOS</div>; };

@@ -1,0 +1,1 @@
+export class Scheduler { start() {} stop() {} add() {} remove() {} getAll() { return []; } }

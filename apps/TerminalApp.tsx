@@ -1,1 +1,2 @@
-import React from 'react'; export const TerminalApp = () => <div className="p-10 bg-black h-full text-green-500 font-mono">Shark Terminal v4.2 Ready...</div>;
+import React from 'react';
+export const TerminalApp = () => <div className="bg-black text-green-500 p-4 font-mono h-full">Shark Terminal v4.2 Ready...</div>;

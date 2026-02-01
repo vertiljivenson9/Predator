@@ -1,0 +1,1 @@
+import React from 'react'; export const RuntimeApp = () => <div className="bg-black h-full text-white">Runtime v1.0</div>;

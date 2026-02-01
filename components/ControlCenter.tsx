@@ -1,0 +1,1 @@
+import React from 'react'; export const ControlCenter = () => <div className="bg-black/80 h-full">Control Center</div>;

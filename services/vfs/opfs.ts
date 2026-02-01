@@ -1,0 +1,1 @@
+export class OPFSBackend { async mount() {} async isLocked() { return false; } async unlock() {} async write() {} async cat() {} async ls() { return []; } async exists() { return false; } }

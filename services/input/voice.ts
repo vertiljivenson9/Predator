@@ -1,0 +1,1 @@
+export class VoiceControl { toggle() {} subscribe() { return () => {}; } }

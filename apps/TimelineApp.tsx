@@ -1,0 +1,1 @@
+import React from 'react'; export const TimelineApp = () => <div className="bg-[#020617] h-full text-white">Timeline v1.0</div>;

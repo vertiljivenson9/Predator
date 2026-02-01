@@ -1,0 +1,1 @@
+export class Shell { async exec(cmd: string, print: any) { print("Executing: " + cmd); } }

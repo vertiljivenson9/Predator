@@ -1,0 +1,1 @@
+export class NotificationManager { push() {} getHistory() { return []; } subscribe() {} }
