@@ -2,5 +2,7 @@ export enum FileType { FILE = 'FILE', DIR = 'DIR' }
 export interface FileNode { path: string; name: string; type: FileType; content: string | null; parentId: string | null; metadata: { created: number; modified: number; size: number; }; }
 export interface Process { pid: number; name: string; status: 'running' | 'ready' | 'blocked' | 'suspended' | 'killed'; startTime: number; priority: number; }
 export interface WindowState { id: string; appId: string; title: string; x: number | string; y: number | string; width: number | string; height: number | string; isMinimized: boolean; isMaximized: boolean; zIndex: number; processId: number; args?: any; }
-export interface AppDefinition { id: string; name: string; icon: string; component: string; version: string; defaultWidth?: number; defaultHeight?: number; price?: number; paymentUrl?: string; author?: string; }
+export interface AppDefinition { id: string; name: string; icon: string; component: string; version: string; wasmUrl?: string; defaultWidth?: number; defaultHeight?: number; price?: number; paymentUrl?: string; author?: string; }
+export interface Notification { id: string; title: string; message: string; icon?: string; timestamp: number; urgent?: boolean; }
 export interface IVFS { mount(path: string, backend: any): void; ls(path: string): Promise<string[]>; cat(path: string): Promise<string>; write(path: string, data: string): Promise<void>; mkdir(path: string): Promise<void>; rm(path: string): Promise<void>; exists(path: string): Promise<boolean>; }
+export interface IRegistry { get(key: string): Promise<any>; set(key: string, value: any): Promise<void>; delete(key: string): Promise<void>; list(prefix: string): Promise<string[]>; flush?: () => Promise<void>; }
