@@ -1,1 +1,1 @@
-export class Registry { async get(k: string) { return localStorage.getItem(k); } async set(k: string, v: any) { localStorage.setItem(k, v); } async delete(k: string) { localStorage.removeItem(k); } }
+export class Registry { /* System Keys */ }

@@ -1,1 +1,1 @@
-import React from 'react'; export const CalculatorApp = () => <div className="bg-black h-full text-white">Calc v1.5</div>;
+export const CalculatorApp = () => null;

@@ -1,1 +1,1 @@
-import React from 'react'; export const SplashScreen = ({ onComplete }: any) => { React.useEffect(() => { onComplete(); }, []); return <div>Splash</div>; };
+export const SplashScreen = () => null;

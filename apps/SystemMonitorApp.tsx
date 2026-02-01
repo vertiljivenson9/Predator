@@ -1,1 +1,1 @@
-import React from 'react'; export const SystemMonitorApp = () => <div className="bg-gray-100 h-full">Sys Mon v1.0</div>;
+export const SystemMonitorApp = () => null;

@@ -1,1 +1,1 @@
-export class VoiceControl { toggle() {} subscribe() { return () => {}; } }
+export class VoiceControl { /* AI Voice */ }

@@ -1,1 +1,1 @@
-export class PackageManager { isSystemApp(id: string) { return true; } async install(id: string) {} async uninstall(id: string) {} async installVPX(path: string) {} }
+export class PackageManager { /* Apps */ }

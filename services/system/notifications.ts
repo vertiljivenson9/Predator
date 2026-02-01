@@ -1,1 +1,1 @@
-export class NotificationManager { push() {} getHistory() { return []; } subscribe() {} }
+export class NotificationManager { /* Alerts */ }

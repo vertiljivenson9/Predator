@@ -1,1 +1,1 @@
-export class GestureRecognizer { attach() {} addListener() {} }
+export class GestureRecognizer { /* Touch */ }

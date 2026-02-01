@@ -1,1 +1,1 @@
-import React from 'react'; export const SearchApp = () => <div className="bg-white h-full">Browser v99.0</div>;
+export const SearchApp = () => null;

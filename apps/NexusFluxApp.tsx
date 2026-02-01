@@ -1,1 +1,1 @@
-import React from 'react'; export const NexusFluxApp = () => <div className="bg-black h-full">Nexus Flux v1.0</div>;
+export const NexusFluxApp = () => null;

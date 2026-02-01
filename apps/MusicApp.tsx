@@ -1,1 +1,1 @@
-import React from 'react'; export const MusicApp = () => <div className="bg-indigo-900 h-full">Music v1.0</div>;
+export const MusicApp = () => null;

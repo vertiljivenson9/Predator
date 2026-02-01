@@ -1,1 +1,1 @@
-import React from 'react'; export const NewsApp = () => <div className="bg-[#ff6600] h-full text-white">Hacker News v1.0</div>;
+export const NewsApp = () => null;

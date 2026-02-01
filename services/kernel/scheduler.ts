@@ -1,1 +1,1 @@
-export class Scheduler { start() {} stop() {} add() {} remove() {} getAll() { return []; } }
+export class Scheduler { /* Procs */ }

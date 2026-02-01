@@ -1,1 +1,1 @@
-import React from 'react'; export const ZipExportApp = () => <div className="bg-[#1e1e1e] h-full text-white">Archive Tool v1.0</div>;
+export const ZipExportApp = () => null;

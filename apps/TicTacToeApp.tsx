@@ -1,1 +1,1 @@
-import React from 'react'; export const TicTacToeApp = () => <div className="bg-gray-900 h-full">TicTacToe v1.0</div>;
+export const TicTacToeApp = () => null;

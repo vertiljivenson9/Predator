@@ -1,1 +1,1 @@
-export class AudioMixer { async init() {} setMasterVolume() {} setMute() {} }
+export class AudioMixer { /* Sound */ }

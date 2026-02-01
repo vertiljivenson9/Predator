@@ -1,1 +1,1 @@
-export class Compositor { registerWindow() {} unregisterWindow() {} bringToFront() {} getAllWindows() { return []; } }
+export class Compositor { /* Windows */ }

@@ -1,1 +1,1 @@
-export class Shell { async exec(cmd: string, print: any) { print("Executing: " + cmd); } }
+export class Shell { /* CLI */ }

@@ -1,1 +1,1 @@
-export class PowerManager { async init() {} async powerOff() {} }
+export class PowerManager { /* Battery */ }

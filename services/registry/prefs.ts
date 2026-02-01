@@ -1,1 +1,1 @@
-export class PersistentRegistry { async get(k: string) { return localStorage.getItem(k); } async set(k: string, v: any) { localStorage.setItem(k, v); } async delete(k: string) { localStorage.removeItem(k); } async flush() {} }
+export class PersistentRegistry { /* Prefs */ }

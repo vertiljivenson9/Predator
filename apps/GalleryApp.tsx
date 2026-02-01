@@ -1,1 +1,1 @@
-import React from 'react'; export const GalleryApp = () => <div className="bg-black h-full">Gallery v2.0</div>;
+export const GalleryApp = () => null;

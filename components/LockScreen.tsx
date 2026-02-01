@@ -1,1 +1,1 @@
-import React from 'react'; export const LockScreen = ({ onUnlock }: any) => <div className="bg-black h-full" onClick={onUnlock}>Locked</div>;
+export const LockScreen = () => null;

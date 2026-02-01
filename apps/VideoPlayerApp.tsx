@@ -1,1 +1,1 @@
-import React from 'react'; export const VideoPlayerApp = () => <div className="bg-black h-full">Video Player v1.0</div>;
+export const VideoPlayerApp = () => null;
