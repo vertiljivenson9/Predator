@@ -1,1 +1,0 @@
-export const ClockApp = () => null;

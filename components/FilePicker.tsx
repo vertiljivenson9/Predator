@@ -1,1 +1,0 @@
-export const FilePicker = () => null;

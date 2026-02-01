@@ -1,1 +1,0 @@
-export class ClipboardManager { /* Copy/Paste */ }
