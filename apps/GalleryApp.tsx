@@ -1,0 +1,1 @@
+// Full Gallery App logic

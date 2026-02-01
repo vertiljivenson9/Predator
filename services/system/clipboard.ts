@@ -1,0 +1,1 @@
+// Full ClipboardManager logic

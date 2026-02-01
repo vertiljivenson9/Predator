@@ -1,71 +1,24 @@
-import React, { useEffect, useState } from 'react'; 
-import { kernel } from './services/kernel'; 
-import { Window } from './components/Window'; 
-import { TerminalApp } from './apps/TerminalApp'; 
-import { GitSyncApp } from './apps/GitSyncApp';
-import { FilesApp } from './apps/FilesApp';
-import { SettingsApp } from './apps/SettingsApp';
-
+import React, { useEffect, useState, useCallback } from 'react'; import { kernel } from './services/kernel'; import { Window } from './components/Window'; import { TerminalApp } from './apps/TerminalApp'; import { GitSyncApp } from './apps/GitSyncApp';
 export default function App() {
-  const [booted, setBooted] = useState(false); 
-  const [windows, setWindows] = useState([]);
-  const [installed, setInstalled] = useState([]);
-
-  useEffect(() => { 
-    kernel.boot().then(async () => {
-        const ids = await kernel.registry.get('apps.installed') || [];
-        const loaded = [];
-        for(const id of ids) {
-            const c = await kernel.fs.cat(`/system/apps/${id}.json`);
-            loaded.push(JSON.parse(c));
-        }
-        setInstalled(loaded);
-        setBooted(true);
-    }); 
-  }, []);
-
+  const [booted, setBooted] = useState(false); const [windows, setWindows] = useState([]);
+  useEffect(() => { kernel.boot().then(() => setBooted(true)); }, []);
   useEffect(() => {
-    const h = (e: any) => {
-      const { appId, args } = e.detail;
-      const app = installed.find(a => a.id === appId);
-      if (!app) return;
-      setWindows(p => {
-        if (p.find(w => w.appId === appId)) return p;
-        const id = Math.random().toString(36).substr(2,9);
-        return [...p, { id, appId, title: app.name, x: 100 + (p.length*20), y: 100 + (p.length*20), width: 700, height: 500, zIndex: 100 + p.length, args }];
-      });
+    const h = (e) => {
+      const id = crypto.randomUUID();
+      setWindows(p => [...p, { id, appId: e.detail.appId, title: e.detail.appId.toUpperCase(), x: 50 + (p.length*20), y: 50 + (p.length*20), width: 800, height: 600, zIndex: 100 + p.length }]);
     };
-    window.addEventListener('sys-launch-app', h as any); return () => window.removeEventListener('sys-launch-app', h as any);
-  }, [installed]);
-
-  const renderApp = (w: any) => {
-      switch(w.appId) {
-          case 'terminal': return <TerminalApp />;
-          case 'git_sync': return <GitSyncApp />;
-          case 'files': return <FilesApp />;
-          case 'settings': return <SettingsApp />;
-          default: return <div className="p-4 text-white font-mono text-xs">Error: App not found</div>;
-      }
-  }
-
-  if (!booted) return <div className="h-screen bg-black flex items-center justify-center text-indigo-500 font-mono tracking-[1em] animate-pulse">SHARK_OS</div>;
-
+    window.addEventListener('sys-launch-app', h); return () => window.removeEventListener('sys-launch-app', h);
+  }, []);
+  if (!booted) return <div className="h-screen bg-black flex items-center justify-center text-blue-500 font-mono tracking-widest">SHARK_OS_BOOTING...</div>;
   return (
-    <div className="h-screen w-screen bg-[#020202] overflow-hidden relative" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564)', backgroundSize: 'cover' }}>
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px]" />
-      <div className="p-10 grid grid-cols-6 gap-8">
-        {installed.map(app => (
-            <div key={app.id} onClick={() => kernel.launchApp(app.id)} className="flex flex-col items-center gap-2 cursor-pointer group">
-                <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-indigo-600/20 transition-all text-indigo-400 font-black">
-                    {app.name[0].toUpperCase()}
-                </div>
-                <span className="text-[8px] font-black text-white/50 uppercase tracking-widest">{app.name}</span>
-            </div>
-        ))}
+    <div className="h-screen w-screen bg-[#020202] relative overflow-hidden" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564)', backgroundSize: 'cover' }}>
+      <div className="p-10 flex gap-10">
+        <div onClick={() => kernel.launchApp('terminal')} className="cursor-pointer text-center"><div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10 text-white font-black text-2xl">T</div><span className="text-[10px] text-white font-bold uppercase mt-2 block">Terminal</span></div>
+        <div onClick={() => kernel.launchApp('git_sync')} className="cursor-pointer text-center"><div className="w-16 h-16 bg-indigo-600/20 rounded-2xl flex items-center justify-center border border-indigo-500/20 text-indigo-400 font-black text-2xl">G</div><span className="text-[10px] text-indigo-400 font-bold uppercase mt-2 block">Replicator</span></div>
       </div>
       {windows.map(w => (
         <Window key={w.id} state={w} onClose={(id) => setWindows(p => p.filter(x => x.id !== id))} onFocus={() => {}}>
-          {renderApp(w)}
+          {w.appId === 'terminal' ? <TerminalApp /> : <GitSyncApp />}
         </Window>
       ))}
     </div>

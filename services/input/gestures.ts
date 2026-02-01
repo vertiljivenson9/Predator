@@ -1,0 +1,1 @@
+// Full GestureRecognizer logic

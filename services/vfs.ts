@@ -1,34 +1,42 @@
-import { FileType } from '../types';
-export class VFS {
+import { IVFS, FileSystemBackend, FileType } from '../types';
+export class VFS implements IVFS {
   private mounts: any[] = [];
-  mount(path: string, backend: any) { 
-    this.mounts = this.mounts.filter(m => m.path !== path); 
-    this.mounts.push({ path, backend }); 
-    this.mounts.sort((a, b) => b.path.length - a.path.length); 
+  mount(path: string, backend: FileSystemBackend): void {
+    this.mounts = this.mounts.filter(m => m.path !== path);
+    this.mounts.push({ path, backend });
+    this.mounts.sort((a, b) => b.path.length - a.path.length);
   }
   private resolve(path: string) {
-    const clean = path === '/' ? '/' : path.replace(/\/$/, '');
+    const cleanPath = path === '/' ? '/' : path.replace(/\/$/, '');
     for (const m of this.mounts) {
-      const prefix = m.path === '/' ? '/' : `${m.path}/`;
-      if (clean === m.path || clean.startsWith(prefix)) return { backend: m.backend, rel: clean };
+      const matchPrefix = m.path === '/' ? '/' : `${m.path}/`;
+      if (cleanPath === m.path || cleanPath.startsWith(matchPrefix)) return { backend: m.backend, relativePath: cleanPath };
     }
     return null;
   }
-  async ls(path: string) { 
-    const r = this.resolve(path); 
-    if (!r) return []; 
-    const res = await r.backend.ls(r.rel);
+  async ls(path: string) {
+    const r = this.resolve(path);
+    if (!r) throw new Error(`VFS Error: No mount at ${path}`);
+    const results = await r.backend.ls(r.relativePath);
     this.mounts.forEach(m => {
-        if (m.path !== '/' && m.path.startsWith(path === '/' ? '' : path)) {
-            const name = m.path.replace(path === '/' ? '/' : path + '/', '').split('/')[0] + '/';
-            if (name && !res.includes(name)) res.push(name);
+        if (m.path === '/') return;
+        const lastSlash = m.path.lastIndexOf('/');
+        const parent = m.path.substring(0, lastSlash === 0 ? 1 : lastSlash) || '/';
+        if (parent === (path === '/' ? '/' : path.replace(/\/$/, ''))) {
+            const name = m.path.substring(m.path.lastIndexOf('/') + 1) + '/';
+            if (!results.includes(name)) results.push(name);
         }
     });
-    return res;
+    return results;
   }
-  async cat(path: string) { const r = this.resolve(path); return r ? r.backend.cat(r.rel) : ''; }
-  async write(path: string, data: string) { const r = this.resolve(path); if (r) await r.backend.write(r.rel, data); }
-  async mkdir(path: string) { const r = this.resolve(path); if (r) await r.backend.mkdir(r.rel); }
-  async rm(path: string) { const r = this.resolve(path); if (r) await r.backend.rm(r.rel); }
-  async exists(path: string) { const r = this.resolve(path); return r ? r.backend.exists(r.rel) : false; }
+  async cat(path: string) { const r = this.resolve(path); return r ? r.backend.cat(r.relativePath) : ''; }
+  async write(path: string, data: string) { const r = this.resolve(path); if (r) await r.backend.write(r.relativePath, data); }
+  async mkdir(path: string) { const r = this.resolve(path); if (r) await r.backend.mkdir(r.relativePath); }
+  async rm(path: string) { const r = this.resolve(path); if (r) await r.backend.rm(r.relativePath); }
+  async exists(path: string) { 
+    const clean = path === '/' ? '/' : path.replace(/\/$/, '');
+    if (this.mounts.some(m => m.path === clean)) return true;
+    const r = this.resolve(path);
+    return r ? r.backend.exists(r.relativePath) : false;
+  }
 }
