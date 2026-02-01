@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { kernel } from './services/kernel';
 import { Window } from './components/Window';
 import { StatusBar } from './components/StatusBar';
@@ -18,7 +18,6 @@ export default function App() {
   const [booted, setBooted] = useState(false);
   const [windows, setWindows] = useState<any[]>([]);
   const [apps, setApps] = useState<any[]>([]);
-  const [activeWin, setActiveWin] = useState<string | null>(null);
 
   useEffect(() => { 
     kernel.boot().then(async () => {
@@ -43,25 +42,20 @@ export default function App() {
   if (!booted) return <div className="h-screen bg-black flex items-center justify-center text-blue-500 font-mono animate-pulse tracking-widest uppercase">Shark OS Booting...</div>;
 
   return (
-    <div className="h-screen w-screen bg-[#020202] relative overflow-hidden font-sans">
+    <div className="h-screen w-screen bg-[#020202] relative overflow-hidden font-sans" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564)', backgroundSize: 'cover' }}>
       <StatusBar />
-      <div className="absolute inset-0 p-8 pt-16 grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-8 content-start">
+      <div className="absolute inset-0 p-8 pt-16 grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-10 content-start">
         {apps.map(app => (
           <div key={app.id} onClick={() => launch(app)} className="flex flex-col items-center gap-3 cursor-pointer group active:scale-95 transition-all">
-            <div className="w-16 h-16 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center shadow-2xl group-hover:bg-white/20 transition-all">
-              {ICONS[app.icon] ? React.createElement(ICONS[app.icon], { size: 32, className: 'text-white' }) : <Zap size={32} />}
+            <div className="w-16 h-16 bg-white/10 backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center justify-center shadow-2xl group-hover:bg-white/20 transition-all">
+              {ICONS[app.icon] ? React.createElement(ICONS[app.icon], { size: 32, className: 'text-white' }) : <Zap size={32} className="text-white" />}
             </div>
             <span className="text-[10px] font-black text-white/80 uppercase tracking-widest text-center truncate w-full">{app.name}</span>
           </div>
         ))}
       </div>
       {windows.map(win => (
-        <Window key={win.id} state={win} 
-          onClose={id => setWindows(p => p.filter(w => w.id !== id))}
-          onMinimize={id => setWindows(p => p.map(w => w.id === id ? {...w, isMinimized: true} : w))}
-          onMaximize={id => setWindows(p => p.map(w => w.id === id ? {...w, isMaximized: !w.isMaximized} : w))}
-          onFocus={id => setActiveWin(id)}
-        >
+        <Window key={win.id} state={win} onClose={id => setWindows(p => p.filter(w => w.id !== id))} onMinimize={id => setWindows(p => p.map(w => w.id === id ? {...w, isMinimized: true} : w))} onMaximize={id => setWindows(p => p.map(w => w.id === id ? {...w, isMaximized: !w.isMaximized} : w))} onFocus={() => {}}>
           {win.appId === 'terminal' && <TerminalApp />}
           {win.appId === 'git_sync' && <GitSyncApp />}
           {win.appId === 'files' && <FilesApp />}
@@ -72,11 +66,6 @@ export default function App() {
           {win.appId === 'clock' && <ClockApp />}
         </Window>
       ))}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 h-14 bg-white/5 backdrop-blur-3xl border border-white/10 rounded-2xl px-4 flex items-center gap-4 shadow-2xl">
-        {windows.map(w => <div key={w.id} onClick={() => setWindows(p => p.map(x => x.id === w.id ? {...x, isMinimized: false} : x))} className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center cursor-pointer border border-white/5 hover:bg-white/20 transition-all">
-          {ICONS[apps.find(a => a.id === w.appId)?.icon] ? React.createElement(ICONS[apps.find(a => a.id === w.appId).icon], { size: 18, className: 'text-white' }) : <Zap size={18}/>}
-        </div>)}
-      </div>
     </div>
   );
 }

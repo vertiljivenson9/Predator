@@ -52,6 +52,8 @@ export class Kernel {
         { id: 'music', name: 'Music', icon: 'Music', component: 'MusicApp', version: '1.0' },
         { id: 'video', name: 'Video', icon: 'Film', component: 'VideoPlayerApp', version: '1.0' },
         { id: 'ide', name: 'Studio', icon: 'Code', component: 'IDEApp', version: '1.2' },
+        { id: 'calculator', name: 'Calc', icon: 'Calculator', component: 'CalculatorApp', version: '1.5' },
+        { id: 'store', name: 'Store', icon: 'ShoppingCart', component: 'StoreApp', version: '1.0' },
         { id: 'clock', name: 'Clock', icon: 'Clock', component: 'ClockApp', version: '1.0' }
       ];
       for (const app of apps) await this.fs.write(`/system/apps/${app.id}.json`, JSON.stringify(app));

@@ -1,7 +1,7 @@
 import { IRegistry } from '../../types';
 export class PersistentRegistry implements IRegistry {
   private cache = new Map<string, any>();
-  private key = 'webos_registry_v15';
+  private key = 'webos_reg_apex';
   constructor() { const raw = localStorage.getItem(this.key); if(raw){ const d = JSON.parse(raw); for(const k in d) this.cache.set(k, d[k]); } }
   async get(k: string) { return this.cache.get(k); }
   async set(k: string, v: any) { this.cache.set(k, v); this.flush(); }

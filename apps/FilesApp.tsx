@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Folder, File, HardDrive, Upload, Plus, ChevronRight } from 'lucide-react';
+import { Folder, File, HardDrive } from 'lucide-react';
 import { kernel } from '../services/kernel';
 export const FilesApp = () => {
   const [path, setPath] = useState('/user/home');
@@ -8,25 +8,15 @@ export const FilesApp = () => {
   const open = (item: string) => {
     const full = path === '/' ? `/${item}` : `${path}/${item}`;
     if(item.endsWith('/')) setPath(full.slice(0, -1));
-    else {
-      const ext = item.split('.').pop();
-      if(['mp4','webm'].includes(ext!)) kernel.launchApp('video', { file: full });
-      else if(['mp3','ogg'].includes(ext!)) kernel.launchApp('music', { file: full });
-      else kernel.launchApp('editor', { file: full });
-    }
+    else kernel.launchApp('editor', { file: full });
   };
   return (
-    <div className="h-full bg-white flex flex-col font-sans text-gray-800">
-      <div className="h-12 border-b flex items-center px-4 gap-4 bg-gray-50">
-        <HardDrive size={18} className="text-gray-400" />
-        <div className="flex-1 bg-white border rounded px-3 py-1 text-xs text-gray-600 font-mono truncate">{path}</div>
-      </div>
-      <div className="flex-1 overflow-auto p-6 grid grid-cols-4 md:grid-cols-6 gap-6">
+    <div className="h-full bg-white flex flex-col font-sans">
+      <div className="h-12 border-b flex items-center px-4 gap-4 bg-gray-50"><HardDrive size={18} className="text-gray-400" /><div className="bg-white border rounded px-3 py-1 text-xs font-mono truncate">{path}</div></div>
+      <div className="flex-1 overflow-auto p-6 grid grid-cols-4 md:grid-cols-6 gap-8">
         {items.map(item => (
-          <div key={item} onClick={() => open(item)} className="flex flex-col items-center gap-2 group cursor-pointer active:scale-90 transition-all">
-            <div className="w-16 h-16 flex items-center justify-center group-hover:bg-gray-100 rounded-2xl">
-              {item.endsWith('/') ? <Folder className="text-yellow-400 fill-yellow-100" size={48} /> : <File className="text-blue-400" size={48} />}
-            </div>
+          <div key={item} onClick={() => open(item)} className="flex flex-col items-center gap-2 cursor-pointer group active:scale-95 transition-all">
+            <div className="w-16 h-16 flex items-center justify-center group-hover:bg-gray-100 rounded-2xl">{item.endsWith('/') ? <Folder className="text-yellow-400 fill-yellow-100" size={48} /> : <File className="text-blue-400" size={48} />}</div>
             <span className="text-[10px] font-bold text-center truncate w-full">{item.replace('/','')}</span>
           </div>
         ))}
