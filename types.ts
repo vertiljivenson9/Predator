@@ -1,3 +1,2 @@
-export enum FileType { FILE = 'FILE', DIR = 'DIR' }
 export interface WindowState { id: string; appId: string; title: string; x: number; y: number; width: number; height: number; isMinimized: boolean; isMaximized: boolean; zIndex: number; processId: number; args?: any; }
 export interface AppDefinition { id: string; name: string; icon: string; component: string; version: string; defaultWidth?: number; defaultHeight?: number; }
