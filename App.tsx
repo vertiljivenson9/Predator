@@ -10,6 +10,7 @@ import { SplashScreen } from './components/SplashScreen';
 import { TerminalApp } from './apps/TerminalApp';
 import { EditorApp } from './apps/EditorApp';
 import { SettingsApp } from './apps/SettingsApp';
+import { SearchApp } from './apps/SearchApp';
 import { FilesApp } from './apps/FilesApp';
 import { CameraApp } from './apps/CameraApp';
 import { GalleryApp } from './apps/GalleryApp';
@@ -37,7 +38,7 @@ const ICONS: Record<string, React.ReactNode> = {
   Image: <Image size={32} className="text-purple-400" />,
   Calculator: <Calculator size={32} className="text-orange-400" />,
   Code: <Code size={32} className="text-blue-500" />,
-  Zap: <Zap size={32} className="text-indigo-400" />,
+  Zap: <Zap size={32} className="text-cyan-400" />,
   ShoppingCart: <ShoppingCart size={32} className="text-green-500" />,
   Globe: <Globe size={32} className="text-sky-400" />,
   Music: <Music size={32} className="text-pink-400" />,
@@ -94,7 +95,7 @@ const App: React.FC = () => {
   const launchApp = useCallback((app: AppDefinition, args?: any) => {
     const id = crypto.randomUUID();
     const pid = kernel.spawnProcess(app.name);
-    const newWin: WindowState = { id, appId: app.id, title: app.name, x: 50, y: 50, width: 700, height: 500, isMinimized: false, isMaximized: false, zIndex: 100 + windows.length, processId: pid, args };
+    const newWin: WindowState = { id, appId: app.id, title: app.name, x: 50, y: 50, width: 750, height: 550, isMinimized: false, isMaximized: false, zIndex: 100 + windows.length, processId: pid, args };
     setWindows(prev => [...prev, newWin]);
     setActiveWinId(id);
   }, [windows.length]);
@@ -130,7 +131,7 @@ const App: React.FC = () => {
       case 'zip_export': return <ZipExportApp />;
       case 'clock': return <ClockApp />;
       case 'editor': return <EditorApp file={win.args?.file} />;
-      default: return <div className="p-4 text-white">App Ready: ${win.appId}</div>;
+      default: return <div className="p-4 text-white font-mono">Module Ready: {win.appId}</div>;
     }
   };
 
@@ -144,20 +145,20 @@ const App: React.FC = () => {
       {isLocked && <LockScreen wallpaper={wallpaper} onUnlock={() => setIsLocked(false)} />}
       <div className="absolute inset-0" style={{ backgroundImage: `url(${wallpaper})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <div className="absolute inset-0 bg-black/20" />
-          <div className="absolute inset-0 p-4 pt-16 grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-4 content-start overflow-y-auto">
+          <div className="absolute inset-0 p-4 pt-16 grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-4 content-start overflow-y-auto no-scrollbar">
             {installedApps.map(app => (
-              <div key={app.id} className="flex flex-col items-center group cursor-pointer" onClick={() => launchApp(app)}>
+              <div key={app.id} className="flex flex-col items-center group cursor-pointer active:scale-90" onClick={() => launchApp(app)}>
                 <div className="w-16 h-16 bg-white/10 backdrop-blur-xl rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-white/20 transition-all shadow-xl">
                   {ICONS[app.icon] || ICONS['Default']}
                 </div>
-                <span className="mt-2 text-[10px] font-bold text-gray-300 group-hover:text-white uppercase tracking-tighter text-center truncate w-full">{app.name}</span>
+                <span className="mt-2 text-[10px] font-bold text-gray-300 group-hover:text-white uppercase tracking-tighter text-center truncate w-full px-1">{app.name}</span>
               </div>
             ))}
           </div>
       </div>
       <div className="absolute inset-0 pointer-events-none z-20">
         {windows.map(win => (
-            <Window key={win.id} state={win} onClose={closeWin} onFocus={(id) => setActiveWinId(id)} onUpdate={(id, up) => setWindows(p => p.map(w => w.id === id ? {...w, ...up} : w))}>
+            <Window key={win.id} state={win} onClose={closeWin} onMinimize={id => setWindows(p => p.map(w => w.id === id ? {...w, isMinimized:true} : w))} onMaximize={id => setWindows(p => p.map(w => w.id === id ? {...w, isMaximized:!w.isMaximized} : w))} onFocus={setActiveWinId} onUpdate={(id, up) => setWindows(p => p.map(w => w.id === id ? {...w, ...up} : w))}>
                 {renderContent(win)}
             </Window>
         ))}

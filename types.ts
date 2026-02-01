@@ -1,2 +1,8 @@
+export enum FileType { FILE = 'FILE', DIR = 'DIR' }
+export interface Process { pid: number; name: string; status: 'running' | 'ready' | 'blocked' | 'suspended' | 'killed'; startTime: number; priority: number; }
 export interface WindowState { id: string; appId: string; title: string; x: number; y: number; width: number; height: number; isMinimized: boolean; isMaximized: boolean; zIndex: number; processId: number; args?: any; }
-export interface AppDefinition { id: string; name: string; icon: string; component: string; version: string; defaultWidth?: number; defaultHeight?: number; }
+export interface AppDefinition { id: string; name: string; icon: string; component: string; version: string; defaultWidth?: number; defaultHeight?: number; author?: string; price?: number; paymentUrl?: string; }
+export interface Notification { id: string; title: string; message: string; timestamp: number; urgent?: boolean; }
+export interface FileSystemBackend { mount(): Promise<void>; ls(path: string): Promise<string[]>; cat(path: string): Promise<string>; write(path: string, data: string): Promise<void>; mkdir(path: string): Promise<void>; rm(path: string): Promise<void>; exists(path: string): Promise<boolean>; }
+export interface IVFS { mount(path: string, backend: FileSystemBackend): void; ls(path: string): Promise<string[]>; cat(path: string): Promise<string>; write(path: string, data: string): Promise<void>; mkdir(path: string): Promise<void>; rm(path: string): Promise<void>; exists(path: string): Promise<boolean>; }
+export interface IRegistry { get(key: string): Promise<any>; set(key: string, value: any): Promise<void>; delete(key: string): Promise<void>; list(prefix: string): Promise<string[]>; flush?: () => Promise<void>; }
