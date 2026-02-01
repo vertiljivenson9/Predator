@@ -7,10 +7,6 @@ import { HistoryService } from './system/history';
 import { PackageManager } from './pkg/manager';
 import { PowerManager } from './system/power';
 import { NetworkStack } from './net/stack';
-import { Compositor } from './wm/compositor';
-import { ClipboardManager } from './system/clipboard';
-import { NotificationManager } from './system/notifications';
-import { VoiceControl } from './input/voice';
 
 export class Kernel {
   public fs = new VFS();
@@ -21,10 +17,6 @@ export class Kernel {
   public pkg = new PackageManager();
   public power = new PowerManager();
   public net = new NetworkStack();
-  public compositor = new Compositor();
-  public clipboard = new ClipboardManager();
-  public notifications = new NotificationManager();
-  public voice = new VoiceControl();
   public bootTime = Date.now();
   private pidCounter = 1;
 
@@ -36,7 +28,7 @@ export class Kernel {
     this.fs.mount('/tmp', new MemoryBackend());
     
     const apps = [
-      { id: 'git_sync', name: 'Replicator v14.3', icon: 'Zap', version: '14.3' },
+      { id: 'git_sync', name: 'Replicator v14.4', icon: 'Zap', version: '14.4' },
       { id: 'settings', name: 'Settings', icon: 'Settings', version: '4.5' },
       { id: 'terminal', name: 'Terminal', icon: 'Terminal', version: '4.2' },
       { id: 'files', name: 'Files', icon: 'Folder', version: '4.1' },
@@ -62,7 +54,7 @@ export class Kernel {
     }
     await this.registry.set('apps.installed', apps.map(a => a.id));
     this.scheduler.start();
-    this.history.record('kernel', 'Kernel v14.3: Master DNA Verified.');
+    this.history.record('kernel', 'Kernel v14.4: Master DNA Verified.');
   }
 
   spawnProcess(name: string) {
