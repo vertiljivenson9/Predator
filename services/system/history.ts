@@ -1,1 +1,0 @@
-// Full HistoryService logic

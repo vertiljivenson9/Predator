@@ -1,1 +1,0 @@
-// Full News App logic

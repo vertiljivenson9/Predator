@@ -1,1 +1,0 @@
-// Full Search App logic

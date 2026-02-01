@@ -1,1 +1,0 @@
-// Full StatusBar logic

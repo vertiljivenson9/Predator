@@ -1,1 +1,0 @@
-// Full Store App logic

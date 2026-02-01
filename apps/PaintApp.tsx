@@ -1,1 +1,0 @@
-// Full Paint App logic

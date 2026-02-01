@@ -1,1 +1,0 @@
-// Full Weather App logic
