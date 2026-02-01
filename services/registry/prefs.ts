@@ -1,0 +1,1 @@
+export class PersistentRegistry { async get(k) { return localStorage.getItem(k); } async set(k, v) { localStorage.setItem(k, v); } }

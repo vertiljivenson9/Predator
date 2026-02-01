@@ -1,0 +1,1 @@
+export class IDBBackend { constructor(n, s) {} async mount() {} async ls() { return []; } async cat() { return ''; } async write() {} async mkdir() {} async rm() {} async exists() { return false; } }

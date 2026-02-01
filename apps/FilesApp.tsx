@@ -1,0 +1,1 @@
+import React from 'react'; export const FilesApp = () => <div className="p-10 bg-white h-full text-black">Explorador de Archivos v4.1 Ready...</div>;
